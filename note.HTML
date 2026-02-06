@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note App</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 50px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+
+        /* Input Area */
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            height: 100px;
+            resize: none;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        button#addBtn {
+            padding: 12px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button#addBtn:hover {
+            background-color: #1557b0;
+        }
+
+        /* Notes Display Area */
+        #notesList {
+            margin-top: 25px;
+        }
+
+        .note-item {
+            background: #fff9c4;
+            padding: 15px;
+            border-left: 5px solid #fbc02d;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .delete-btn {
+            background: #d93025;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            float: right;
+            text-transform: uppercase;
+        }
+
+        .delete-btn:hover {
+            background: #a5170e;
+        }
+
+        p {
+            margin: 0;
+            margin-top: 10px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>My Notes 📝</h2>
+        <div class="input-section">
+            <textarea id="noteInput" placeholder="Write your note here..."></textarea>
+            <button onclick="addNote()" id="addBtn">Add Note</button>
+        </div>
+        <div id="notesList"></div>
+    </div>
+
+    <script>
+        // Load notes from LocalStorage when the page loads
+        document.addEventListener('DOMContentLoaded', displayNotes);
+
+        function addNote() {
+            const noteInput = document.getElementById('noteInput');
+            const noteText = noteInput.value;
+
+            // Check if input is empty
+            if (noteText.trim() === "") {
+                alert("Please write something!");
+                return;
+            }
+
+            // Get existing notes or start a new array
+            let notes = localStorage.getItem('myNotes') ? JSON.parse(localStorage.getItem('myNotes')) : [];
+            
+            // Add new note to the array
+            notes.push(noteText);
+            
+            // Save back to LocalStorage
+            localStorage.setItem('myNotes', JSON.stringify(notes));
+
+            // Clear input and refresh list
+            noteInput.value = "";
+            displayNotes();
+        }
+
+        function displayNotes() {
+            const notesList = document.getElementById('notesList');
+            let notes = localStorage.getItem('myNotes') ? JSON.parse(localStorage.getItem('myNotes')) : [];
+            
+            notesList.innerHTML = ""; // Clear list before rendering
+
+            notes.forEach((note, index) => {
+                const noteDiv = document.createElement('div');
+                noteDiv.classList.add('note-item');
+                noteDiv.innerHTML = `
+                    <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
+                    <p>${note}</p>
+                `;
+                notesList.appendChild(noteDiv);
+            });
+        }
+
+        function deleteNote(index) {
+            let notes = JSON.parse(localStorage.getItem('myNotes'));
+            // Remove the note at the specific index
+            notes.splice(index, 1);
+            // Update LocalStorage
+            localStorage.setItem('myNotes', JSON.stringify(notes));
+            // Refresh display
+            displayNotes();
+        }
+    </script>
+</body>
+</html>
+</body>
+</html>
